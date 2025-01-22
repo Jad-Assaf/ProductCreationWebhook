@@ -4,15 +4,19 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 
-# Explicitly load the .env from the current directory
+# Explicitly load environment variables (useful for local development)
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 
 app = Flask(__name__)
 
-# Your other store's API key, password, and store URL
+# Fetch environment variables
 SHOPIFY_ACCESS_TOKEN = os.getenv('SHOPIFY_ACCESS_TOKEN')
 STORE_URL = os.getenv('STORE_URL')
+
+# Ensure environment variables are loaded
+if not SHOPIFY_ACCESS_TOKEN or not STORE_URL:
+    raise ValueError("Missing SHOPIFY_ACCESS_TOKEN or STORE_URL in environment variables.")
 
 @app.route('/', methods=['POST'])
 @app.route('/webhook', methods=['POST'])
@@ -90,5 +94,9 @@ def get_existing_product_id_by_sku(sku, headers):
         print("Error fetching products from target store:", response.status_code, response.text)
     return None
 
-if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+# Vercel handler
+def handler(request, *args, **kwargs):
+    """
+    Wrap the Flask app in a handler for Vercel.
+    """
+    return app(request.environ, start_response=lambda status, headers: None)
