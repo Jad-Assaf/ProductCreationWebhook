@@ -11,13 +11,11 @@ load_dotenv(dotenv_path=env_path)
 app = Flask(__name__)
 
 # Your other store's API key, password, and store URL
-API_KEY = os.getenv('API_KEY')
-PASSWORD = os.getenv('PASSWORD')
+SHOPIFY_ACCESS_TOKEN = os.getenv('SHOPIFY_ACCESS_TOKEN')
 STORE_URL = os.getenv('STORE_URL')
 
 # Debug prints to verify environment is loaded
-print(f"API_KEY is: {repr(API_KEY)}")
-print(f"PASSWORD is: {repr(PASSWORD)}")
+print(f"API_KEY is: {repr(SHOPIFY_ACCESS_TOKEN)}")
 print(f"STORE_URL is: {repr(STORE_URL)}")
 
 @app.route('/', methods=['POST'])
@@ -38,7 +36,7 @@ def create_or_update_product(product):
     """
     headers = {
         'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': PASSWORD
+        'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN
     }
 
     # Extract SKU from the product
