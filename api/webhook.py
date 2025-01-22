@@ -95,8 +95,8 @@ def get_existing_product_id_by_sku(sku, headers):
     return None
 
 # Vercel handler
-def handler(request, *args, **kwargs):
+def handler(environ, start_response):
     """
-    Wrap the Flask app in a handler for Vercel.
+    Wrap the Flask app as a WSGI application for Vercel.
     """
-    return app(request.environ, start_response=lambda status, headers: None)
+    return app(environ, start_response)
