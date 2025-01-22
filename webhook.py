@@ -2,9 +2,11 @@ from flask import Flask, request, jsonify
 import requests
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 
-# Load environment variables from .env
-load_dotenv()
+# Explicitly load the .env from the current directory
+env_path = Path('.') / '.env'
+load_dotenv(dotenv_path=env_path)
 
 app = Flask(__name__)
 
@@ -12,6 +14,11 @@ app = Flask(__name__)
 API_KEY = os.getenv('API_KEY')
 PASSWORD = os.getenv('PASSWORD')
 STORE_URL = os.getenv('STORE_URL')
+
+# Debug prints to verify environment is loaded
+print(f"API_KEY is: {repr(API_KEY)}")
+print(f"PASSWORD is: {repr(PASSWORD)}")
+print(f"STORE_URL is: {repr(STORE_URL)}")
 
 @app.route('/', methods=['POST'])
 @app.route('/webhook', methods=['POST'])
@@ -31,7 +38,7 @@ def create_or_update_product(product):
     """
     headers = {
         'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': PASSWORD  # Using the password/token for a private or custom app
+        'X-Shopify-Access-Token': PASSWORD
     }
 
     # Extract SKU from the product
