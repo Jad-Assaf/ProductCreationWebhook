@@ -3,7 +3,7 @@ import requests
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
+# Load environment variables from .env
 load_dotenv()
 
 app = Flask(__name__)
@@ -13,6 +13,7 @@ API_KEY = os.getenv('API_KEY')
 PASSWORD = os.getenv('PASSWORD')
 STORE_URL = os.getenv('STORE_URL')
 
+@app.route('/', methods=['POST'])
 @app.route('/webhook', methods=['POST'])
 def handle_webhook():
     """
@@ -30,7 +31,7 @@ def create_or_update_product(product):
     """
     headers = {
         'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': PASSWORD
+        'X-Shopify-Access-Token': PASSWORD  # Using the password/token for a private or custom app
     }
 
     # Extract SKU from the product
@@ -90,4 +91,3 @@ def get_existing_product_id_by_sku(sku, headers):
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
-
