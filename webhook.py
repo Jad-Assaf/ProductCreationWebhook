@@ -39,16 +39,20 @@ def create_or_update_product(product):
         print("Product does not have a SKU, skipping.")
         return
 
+    print(f"Processing product with SKU: {sku}")
+
     # Check if a product with the same SKU exists in the target store
     existing_product_id = get_existing_product_id_by_sku(sku, headers)
 
     if existing_product_id:
         # Update the existing product
         url = f"{STORE_URL}/products/{existing_product_id}.json"
+        print(f"Updating product with ID {existing_product_id}")
         response = requests.put(url, json={"product": product}, headers=headers)
     else:
         # Create a new product
         url = f"{STORE_URL}/products.json"
+        print(f"Creating new product with SKU {sku}")
         response = requests.post(url, json={"product": product}, headers=headers)
 
     # Log the response
